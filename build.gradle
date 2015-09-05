@@ -5,7 +5,7 @@ sourceCompatibility = 1.5
 version = '0.1'
 jar {
     manifest {
-        attributes 'Main-Class': 'pgorecki.PCR'
+        attributes 'Main-Class': 'com.pgorecki.PCR'
     }
 }
 
