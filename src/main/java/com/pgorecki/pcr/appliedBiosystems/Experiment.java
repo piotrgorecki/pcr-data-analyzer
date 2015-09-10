@@ -24,6 +24,9 @@ public class Experiment {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public ExperimentDefinition getExperimentDefinition() {
+		return this.experimentDefinition;
+	}
 	
 	public void addSample(String wellId, String sampleName, String targetName, Double cт) {
 		
@@ -64,6 +67,7 @@ public class Experiment {
 				return group;
 		return null;
 	}
+
 	
 
 
