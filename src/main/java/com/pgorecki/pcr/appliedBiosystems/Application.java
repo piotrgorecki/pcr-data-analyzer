@@ -1,14 +1,20 @@
 package com.pgorecki.pcr.appliedBiosystems;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Application {
 	
-	public static void main(String[] args) {
-
-		ExperimentDefinition experimentDefinition = new ExperimentDefinition("/home/piotr/workspace/groups");
+	public static void main(String[] args) throws IOException {
 		
-		XLSReader xls = new XLSReader("/home/piotr/workspace/20150904PBG_data.xls");
+		String experimentDefinitionFilePath = args[0];
+		String xlsPath = args[1];
+		
+		System.out.println(experimentDefinitionFilePath + "; " + xlsPath);
+
+		ExperimentDefinition experimentDefinition = new ExperimentDefinition(experimentDefinitionFilePath);
+		
+		XLSReader xls = new XLSReader(xlsPath);
 		Experiment experiment = xls.parseExperiment("Results", experimentDefinition);
 				
 		
@@ -48,20 +54,26 @@ public class Application {
 				rqList.add(rqValue);
 			}
 			
-			
 			Double avgΔΔcт = mean(ΔΔcтList);
+			group.setMeanΔΔcт(avgΔΔcт);
 			System.out.println("avgΔΔcт: " + avgΔΔcт);
 			
 			Double semΔΔcт = stderr(ΔΔcтList);
+			group.setSemΔΔcт(semΔΔcт);
 			System.out.println("semΔΔcт: " + semΔΔcт);
 			
-			Double avgRq = mean(rqList);
-			System.out.println("avgRq: " + avgRq);
+			Double meanRq = mean(rqList);
+			group.setMeanRq(meanRq);
+			System.out.println("avgRq: " + meanRq);
 			
 			Double semRq = stderr(rqList);
+			group.setSemRq(semRq);
 			System.out.println("semRq: " + semRq);
 		
 		}
+		
+		Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment));		
+		Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment));
 				
 	}
 	
@@ -100,30 +112,29 @@ public class Application {
 		return ΔcтList;
 	}
 	
-	
-	public static double mean(ArrayList<Double> list) {
+	private static double mean(ArrayList<Double> list) {
 	    double tot = 0.0;
 	    for (Double i : list)
 	      tot += i;
 	    return tot / list.size();
 	}
-	public static double sdev(ArrayList<Double> list) {
+	private static double sdev(ArrayList<Double> list) {
 	    return Math.sqrt(variance(list));
 	}
 	private static Double stderr(ArrayList<Double> list) {
 		return sdev(list) / Math.sqrt(list.size());
 	}
-	public static double variance(ArrayList<Double> list) {
+	private static double variance(ArrayList<Double> list) {
 	    double mu = mean(list);
 	    double sumsq = 0.0;
 	    for (Double i : list)
 	      sumsq += sqr(mu - i);
 	    return sumsq / (list.size());
 	}
-	public static double sqr(double x) {
+	private static double sqr(double x) {
 	    return x * x;
 	}
-	public static Double rq(Double exponent) {
+	private static Double rq(Double exponent) {
 		return Math.pow(2, -exponent);
 	}
 	

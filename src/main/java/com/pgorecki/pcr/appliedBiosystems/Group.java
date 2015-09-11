@@ -11,7 +11,29 @@ public class Group {
 	private Boolean isControll;
 	private ArrayList<Counterpart> counterpartList = new ArrayList<Counterpart>();
 	private ArrayList<String> sampleNameList = new ArrayList<String>();
+	private Double meanΔΔcт;
+	private Double semΔΔcт;
+	private Double meanRq;
+	private Double semRq;
 	
+	public Double getSemRq() {
+		return semRq;
+	}
+	public void setSemRq(Double semRq) {
+		this.semRq = semRq;
+	}
+	public Double getMeanRq() {
+		return meanRq;
+	}
+	public void setMeanRq(Double meanRq) {
+		this.meanRq = meanRq;
+	}
+	public Double getSemΔΔcт() {
+		return semΔΔcт;
+	}
+	public void setSemΔΔcт(Double semΔΔcт) {
+		this.semΔΔcт = semΔΔcт;
+	}
 	public String getName() {
 		return name;
 	}
@@ -29,6 +51,12 @@ public class Group {
 	}
 	public Boolean isReference() {
 		return this.targetName.getIsReference();
+	}
+	public Double getMeanΔΔcт() {
+		return this.meanΔΔcт;
+	}
+	public void setMeanΔΔcт(Double meanΔΔcт) {
+		this.meanΔΔcт = meanΔΔcт;
 	}
 		
 	public Group(String name, Boolean isControll, TargetName targetName) {
