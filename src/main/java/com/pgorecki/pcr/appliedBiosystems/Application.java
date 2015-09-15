@@ -9,15 +9,10 @@ import com.pgorecki.pcr.iface.Frame;
 public class Application {
 
 	public static void main(String[] args) throws IOException {
-
-//		Experiment experiment = Process(args[0], args[1]);
-//
-//		String meanΔΔcтPlotPath = Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment));		
-//		String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment));
-
+		
 		EventQueue.invokeLater(new Runnable() {			
 			public void run() {
-				Frame frame = new Frame();
+				new Frame();
 			}
 		});
 	}
