@@ -17,6 +17,9 @@ import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 
 public class Plotter {
 	
+	public final static int DEFAULT_WIDTH = 640;
+	public final static int DEFAULT_HEIGHT = 480;
+	
 	public static DefaultStatisticalCategoryDataset getDatasetMeanΔΔcт(Experiment experiment) {
 		DefaultStatisticalCategoryDataset dataset = new DefaultStatisticalCategoryDataset();
 		for (Group group : experiment.getGroupList()) {
@@ -37,7 +40,7 @@ public class Plotter {
 		return dataset;
 	}
 	
-	public static void plot(Experiment experiment, String xAxis, String yAxis, String outFileName, CategoryDataset dataset) throws IOException {	
+	public static String plot(Experiment experiment, String xAxis, String yAxis, String outFileName, CategoryDataset dataset) throws IOException {	
 		CategoryAxis oxAxis = new CategoryAxis(xAxis);
 		ValueAxis oyAxis = new NumberAxis(yAxis);
 		CategoryItemRenderer renderer = new StatisticalBarRenderer();
@@ -48,10 +51,10 @@ public class Plotter {
 
         JFreeChart chart = new JFreeChart(experiment.getExperimentDefinition().getExperimentName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);        
         
-        int width = 640;
-        int height = 480; 
-        File pieChart = new File("/home/piotr/workspace/" + outFileName + ".jpeg"); 
-        ChartUtilities.saveChartAsJPEG(pieChart , chart , width , height);
+        String path = "/home/piotr/workspace/" + outFileName + ".jpeg";
+        File pieChart = new File(path); 
+        ChartUtilities.saveChartAsJPEG(pieChart , chart , Plotter.DEFAULT_WIDTH , Plotter.DEFAULT_HEIGHT);
+        return path;
 	}
 
 }
