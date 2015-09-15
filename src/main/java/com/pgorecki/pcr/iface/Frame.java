@@ -35,7 +35,7 @@ public class Frame extends JFrame {
 	
 	private static final String experimentDefinitionExample = "experiment: Experiment name\n" + 
 "reference: RPL0\n" + 
-"controll: 130404 RT 1,130404 RT 2,130404 RT 3\n" +
+"control: 130404 RT 1,130404 RT 2,130404 RT 3\n" +
 "3h: 130404 RT 4,130404 RT 5,130404 RT 6\n" +
 "6h: 130404 RT 7,130404 RT 8,130404 RT 9";
 
@@ -123,9 +123,7 @@ public class Frame extends JFrame {
 		constraints.gridx = gridx;
 		constraints.gridy = 3;
 		constraints.gridwidth = 4;
-//		constraints.weightx = 0.5;
 		constraints.insets = new Insets(20,0,0,0);
-//		constraints.ipady = 300;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.anchor = GridBagConstraints.CENTER;
 		this.panel.add(new PlotComponent(path), constraints);

@@ -103,7 +103,7 @@ public class ExperimentDefinition {
 				this.experimentName = line.substring(line.indexOf(":") + 1).trim();
 			else if (line.matches("reference: ?.*"))
 				this.reference = line.substring(line.indexOf(":") +1).trim();
-			else if (line.matches("controll: ?.*" ))					
+			else if (line.matches("control: ?.*" ))					
 				for (String sampleName : line.substring(line.indexOf(":") + 1).trim().split(", ?"))
 					this.controlGroup.add(sampleName);
 			else if (line.matches(".*: ?.*")) {
