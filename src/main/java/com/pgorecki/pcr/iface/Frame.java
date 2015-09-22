@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,19 +24,23 @@ import com.pgorecki.pcr.appliedBiosystems.Application;
 import com.pgorecki.pcr.appliedBiosystems.Experiment;
 import com.pgorecki.pcr.appliedBiosystems.Plotter;
 
+import utils.JarPath;
+
 public class Frame extends JFrame {
 	
 	private JPanel panel = new JPanel();
-	private JTextArea configurationField;
+	private JTextField experimentTitleField;
+	private JTextField refrenceField;
+	private JTextField controllField;
+	private JTextArea groupsArea;	
+	
 	private JLabel xlsPathLabel;
 	
 	private static final int DEFAULT_WIDTH = 1300;
 	private static final int DEFAULT_HEIGHT = 800;
 	private static final long serialVersionUID = 1L;
 	
-	private static final String experimentDefinitionExample = "experiment: Experiment name\n" + 
-"reference: RPL0\n" + 
-"control: 130404 RT 1,130404 RT 2,130404 RT 3\n" +
+	private static final String experimentDefinitionExample = 
 "3h: 130404 RT 4,130404 RT 5,130404 RT 6\n" +
 "6h: 130404 RT 7,130404 RT 8,130404 RT 9";
 
@@ -46,7 +51,8 @@ public class Frame extends JFrame {
 		setLocationByPlatform(true);
 		setVisible(true);
 		
-		Image icon = new ImageIcon("/home/piotr/PCRIco.png").getImage();
+		URL path = getClass().getClassLoader().getResource("ico.png");
+		Image icon = new ImageIcon(path).getImage();		
 		setIconImage(icon);
 		
 		this.panel = new JPanel(new GridBagLayout());
@@ -58,7 +64,7 @@ public class Frame extends JFrame {
 		constraints.gridx = 0;
 		constraints.gridwidth = 1;
 		constraints.ipadx = 20;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.fill = GridBagConstraints.VERTICAL;
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		JLabel xlsLabel = new JLabel("XLS file:");		
 		this.panel.add(xlsLabel, constraints);
@@ -86,8 +92,7 @@ public class Frame extends JFrame {
 		this.panel.add(openFileBtn, constraints);
 
 		
-		
-		//2 row
+		// Experiment title
 		constraints = new GridBagConstraints();
 		constraints.gridx = 0;
 		constraints.gridy = 1;
@@ -95,20 +100,64 @@ public class Frame extends JFrame {
 		constraints.ipadx = 20;
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		constraints.fill = GridBagConstraints.VERTICAL;
-		JLabel configurationLabel = new JLabel("Configuration file:");
-		this.panel.add(configurationLabel, constraints);
+		this.panel.add(new JLabel("Experiment title:"), constraints);
 		
 		constraints.gridx = 1;
-		constraints.gridy = 1;
 		constraints.gridwidth = 2;
-		configurationField = new JTextArea(Frame.experimentDefinitionExample, 10, 40);
-		this.panel.add(configurationField, constraints);
+		this.experimentTitleField = new JTextField("Some experiment", 40);
+		this.panel.add(this.experimentTitleField, constraints);
+				
+		// Reference
+		constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.ipadx = 20;
+		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		constraints.fill = GridBagConstraints.VERTICAL;
+		this.panel.add(new JLabel("Refrence:"), constraints);
+		
+		constraints.gridx = 1;
+		constraints.gridwidth = 2;
+		this.refrenceField = new JTextField("RPL0", 40);
+		this.panel.add(this.refrenceField, constraints);
+		
+		// Control
+		constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.ipadx = 20;
+		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		constraints.fill = GridBagConstraints.VERTICAL;
+		this.panel.add(new JLabel("Control:"), constraints);
+		
+		constraints.gridx = 1;
+		constraints.gridwidth = 2;
+		this.controllField = new JTextField("130404 RT 1,130404 RT 2,130404 RT 3", 40);
+		this.panel.add(this.controllField, constraints);
+		
+		
+		// Groups 
+		constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.ipadx = 20;
+		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		constraints.fill = GridBagConstraints.VERTICAL;
+		this.panel.add(new JLabel("Groups:"), constraints);
+		
+		constraints.gridx = 1;
+		constraints.gridwidth = 2;
+		this.groupsArea = new JTextArea(Frame.experimentDefinitionExample, 5, 40);
+		this.panel.add(this.groupsArea, constraints);
 		
 		
 		// 3 row
 		constraints = new GridBagConstraints();
 		constraints.gridx = 2;
-		constraints.gridy = 2;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;	
 		constraints.anchor = GridBagConstraints.LINE_END;
 		JButton proccessBtn = new JButton("Proccess");		
@@ -135,12 +184,11 @@ public class Frame extends JFrame {
 	}
 	
 	
-	private class ProccessAction implements ActionListener {
-		
+	private class ProccessAction implements ActionListener {		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			String experimentDefinition = configurationField.getText().trim();
+			String experimentDefinition = groupsArea.getText().trim();
 			
 			if (!experimentDefinition.isEmpty() && !xlsPathLabel.getText().isEmpty()) {
 				Experiment experiment = Application.Process(experimentDefinition, xlsPathLabel.getText());
