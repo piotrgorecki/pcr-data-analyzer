@@ -15,6 +15,8 @@ import org.jfree.chart.renderer.category.StatisticalBarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 
+import utils.JarPath;
+
 public class Plotter {
 	
 	public final static int DEFAULT_WIDTH = 640;
@@ -50,8 +52,8 @@ public class Plotter {
         plot.setOrientation(PlotOrientation.VERTICAL);
 
         JFreeChart chart = new JFreeChart(experiment.getExperimentDefinition().getExperimentName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);        
-        
-        String path = (new File(".")).getAbsolutePath() + outFileName + ".jpeg";
+                
+        String path = JarPath.getPath() + outFileName + ".jpeg";
         File file = new File(path); 
         ChartUtilities.saveChartAsJPEG(file , chart , Plotter.DEFAULT_WIDTH , Plotter.DEFAULT_HEIGHT);
         return path;

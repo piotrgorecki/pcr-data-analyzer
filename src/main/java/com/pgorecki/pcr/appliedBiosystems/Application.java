@@ -18,11 +18,7 @@ public class Application {
 	}
 
 
-	public static Experiment Process(String experimentDefinitionOrFilePath, String xlsPath) {
-		System.out.println(experimentDefinitionOrFilePath + "; " + xlsPath);
-
-		ExperimentDefinition experimentDefinition = new ExperimentDefinition(experimentDefinitionOrFilePath);
-
+	public static Experiment Process(ExperimentDefinition experimentDefinition, String xlsPath) {
 		XLSReader xls = new XLSReader(xlsPath);
 		Experiment experiment = xls.parseExperiment("Results", experimentDefinition);
 

@@ -1,10 +1,7 @@
 package com.pgorecki.pcr.appliedBiosystems;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class ExperimentDefinition {
 
@@ -14,22 +11,22 @@ public class ExperimentDefinition {
 	private String reference;
 	private ArrayList<String> controlGroup = new ArrayList<String>();
 	private ArrayList<HashMap<String, String[]>> groupList = new ArrayList<>();
-
-	public ExperimentDefinition(String definition) {
+	
+	public ExperimentDefinition(String name, String reference, String control) {
 		super();
-		readDefinition(new Scanner(definition));		
+		this.experimentName = name;
+		this.reference = reference;
+		for (String el : control.split(", ?"))
+			this.controlGroup.add(el);
 	}
-
-	public ExperimentDefinition(Path path) {
-		super();
-		try {
-			readDefinition(new Scanner(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
+	
+	public void addGroup(String name, String targetNames) {
+		String[] splitted = targetNames.split(", ?");
+		HashMap<String, String[]> map = new HashMap<String, String[]>();
+		map.put(name, splitted);
+		this.groupList.add(map);
 	}
-
-
+		
 	public String getExperimentName() {
 		return this.experimentName;
 	}
@@ -90,32 +87,6 @@ public class ExperimentDefinition {
 
 	public String[] getSampleNameListForControll() {
 		return this.controlGroup.toArray(new String[this.controlGroup.size()]);
-	}
-
-
-
-
-	private void readDefinition(Scanner scanner) {	
-		while (scanner.hasNext()) {
-			String line = scanner.nextLine();	
-
-			if (line.matches("experiment: ?.*"))
-				this.experimentName = line.substring(line.indexOf(":") + 1).trim();
-			else if (line.matches("reference: ?.*"))
-				this.reference = line.substring(line.indexOf(":") +1).trim();
-			else if (line.matches("control: ?.*" ))					
-				for (String sampleName : line.substring(line.indexOf(":") + 1).trim().split(", ?"))
-					this.controlGroup.add(sampleName);
-			else if (line.matches(".*: ?.*")) {
-				String name = line.substring(0, line.indexOf(":")).trim();
-				String[] splitted = line.substring(line.indexOf(":") + 1).trim().split(", ?");
-				HashMap<String, String[]> map = new HashMap<String, String[]>();
-				map.put(name, splitted);
-				this.groupList.add(map);
-			}
-
-		}
-		scanner.close();
 	}
 
 }

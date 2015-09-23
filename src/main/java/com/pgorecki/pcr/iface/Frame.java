@@ -17,11 +17,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.pgorecki.pcr.appliedBiosystems.Application;
 import com.pgorecki.pcr.appliedBiosystems.Experiment;
+import com.pgorecki.pcr.appliedBiosystems.ExperimentDefinition;
 import com.pgorecki.pcr.appliedBiosystems.Plotter;
 
 public class Frame extends JFrame {
@@ -31,7 +31,6 @@ public class Frame extends JFrame {
 	private JTextField experimentTitleField;
 	private JTextField refrenceField;
 	private JTextField controllField;
-	private JTextArea groupsArea;
 	private JTextField group1NameField = new JTextField("3h");
 	private JTextField group2NameField = new JTextField("6h");
 	private JTextField group3NameField = new JTextField();
@@ -40,9 +39,10 @@ public class Frame extends JFrame {
 	private JTextField group2TargetNameField = new JTextField("130404 RT 7,130404 RT 8,130404 RT 9");
 	private JTextField group3TargetNameField = new JTextField();
 	private JTextField group4TargetNameField = new JTextField();
+	private JButton proccessBtn = new JButton("Proccess");
 	
 	private final short TEXT_FIELD_SIZE = 50;	
-	private static final int DEFAULT_WIDTH = 1300;
+	private static final int DEFAULT_WIDTH = 1400;
 	private static final int DEFAULT_HEIGHT = 800;
 	private static final long serialVersionUID = 1L;
 	
@@ -50,7 +50,7 @@ public class Frame extends JFrame {
 	public Frame() {
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("PCR Analyzer (v 0.2)");
+		setTitle("PCR Analyzer (v 0.3)");
 		setLocationByPlatform(true);
 		setVisible(true);
 		
@@ -150,11 +150,11 @@ public class Frame extends JFrame {
 		// PROCESS
 		constraints = new GridBagConstraints();
 		constraints.gridx = 3;
-		constraints.gridy = 78;
+		constraints.gridy = 8;
 		constraints.gridwidth = 1;	
-		constraints.anchor = GridBagConstraints.LINE_END;
-		JButton proccessBtn = new JButton("Proccess");		
-		proccessBtn.addActionListener(new ProccessAction());
+		constraints.anchor = GridBagConstraints.LINE_END;		
+		this.proccessBtn.setEnabled(false);
+		this.proccessBtn.addActionListener(new ProccessAction());
 		this.panel.add(proccessBtn, constraints);
 		
 		add(this.panel);
@@ -163,7 +163,7 @@ public class Frame extends JFrame {
 	public void addPlot(String path, int gridx) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = gridx;
-		constraints.gridy = 3;
+		constraints.gridy = 9;
 		constraints.gridwidth = 4;
 		constraints.insets = new Insets(20,0,0,0);
 		constraints.fill = GridBagConstraints.BOTH;
@@ -217,9 +217,15 @@ public class Frame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			String experimentDefinition = groupsArea.getText().trim();
-			
-			if (!experimentDefinition.isEmpty() && !xlsPathLabel.getText().isEmpty()) {
+			if (!xlsPathLabel.getText().isEmpty()) {
+				ExperimentDefinition experimentDefinition = new ExperimentDefinition(experimentTitleField.getText(), refrenceField.getText(), controllField.getText());
+				
+				addGroup(experimentDefinition, group1NameField, group1TargetNameField);
+				addGroup(experimentDefinition, group2NameField, group2TargetNameField);
+				addGroup(experimentDefinition, group3NameField, group3TargetNameField);
+				addGroup(experimentDefinition, group4NameField, group4TargetNameField);
+				
+				
 				Experiment experiment = Application.Process(experimentDefinition, xlsPathLabel.getText());
 				try {
 					String meanΔΔcтPlotPath = Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment));
@@ -229,12 +235,23 @@ public class Frame extends JFrame {
 					String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment));
 					System.out.println(rqPlotPath);
 					addPlot(rqPlotPath, 4);
+					xlsPathLabel.setText(rqPlotPath);
+					proccessBtn.setEnabled(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}						
 			} else
-				System.out.println("Ohhh");
-		}		
+				System.out.println("XLS file didn't chose");
+		}
+		
+		private void addGroup(ExperimentDefinition experiment, JTextField groupName, JTextField targetName) {
+			if (isFilled(groupName, targetName))
+				experiment.addGroup(groupName.getText(), targetName.getText());
+		}
+		
+		private Boolean isFilled(JTextField field1, JTextField field2) {
+			return !field1.getText().isEmpty() && !field2.getText().isEmpty();
+		}
 	}
 	
 	private class OpenFileAction implements ActionListener {
@@ -251,9 +268,10 @@ public class Frame extends JFrame {
 
 			int result = this.chooser.showOpenDialog(panel);
 
-			if (result == JFileChooser.APPROVE_OPTION)
+			if (result == JFileChooser.APPROVE_OPTION) {
 				xlsPathLabel.setText(this.chooser.getSelectedFile().getPath());
-
+				proccessBtn.setEnabled(true);
+			}
 		}
 	}
 	
