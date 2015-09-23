@@ -24,25 +24,28 @@ import com.pgorecki.pcr.appliedBiosystems.Application;
 import com.pgorecki.pcr.appliedBiosystems.Experiment;
 import com.pgorecki.pcr.appliedBiosystems.Plotter;
 
-import utils.JarPath;
-
 public class Frame extends JFrame {
 	
+	private JLabel xlsPathLabel;
 	private JPanel panel = new JPanel();
 	private JTextField experimentTitleField;
 	private JTextField refrenceField;
 	private JTextField controllField;
-	private JTextArea groupsArea;	
+	private JTextArea groupsArea;
+	private JTextField group1NameField = new JTextField("3h");
+	private JTextField group2NameField = new JTextField("6h");
+	private JTextField group3NameField = new JTextField();
+	private JTextField group4NameField = new JTextField();
+	private JTextField group1TargetNameField = new JTextField("130404 RT 4,130404 RT 5,130404 RT 6");
+	private JTextField group2TargetNameField = new JTextField("130404 RT 7,130404 RT 8,130404 RT 9");
+	private JTextField group3TargetNameField = new JTextField();
+	private JTextField group4TargetNameField = new JTextField();
 	
-	private JLabel xlsPathLabel;
-	
+	private final short TEXT_FIELD_SIZE = 50;	
 	private static final int DEFAULT_WIDTH = 1300;
 	private static final int DEFAULT_HEIGHT = 800;
 	private static final long serialVersionUID = 1L;
 	
-	private static final String experimentDefinitionExample = 
-"3h: 130404 RT 4,130404 RT 5,130404 RT 6\n" +
-"6h: 130404 RT 7,130404 RT 8,130404 RT 9";
 
 	public Frame() {
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -72,11 +75,11 @@ public class Frame extends JFrame {
 		constraints = new GridBagConstraints();
 		constraints.gridy = 0;
 		constraints.gridx = 1;
-		constraints.gridwidth = 1;		
-		constraints.anchor = GridBagConstraints.PAGE_START;
+		constraints.gridwidth = 3;		
+		constraints.anchor = GridBagConstraints.LINE_START;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		this.xlsPathLabel = new JLabel();
-		this.xlsPathLabel.setSize(40,20);
+		this.xlsPathLabel.setSize(TEXT_FIELD_SIZE, 20);
 		this.panel.add(this.xlsPathLabel, constraints);
 		
 
@@ -86,7 +89,7 @@ public class Frame extends JFrame {
 		openFileBtn.addActionListener(new OpenFileAction(chooser));		
 		constraints = new GridBagConstraints();
 		constraints.gridy = 0;
-		constraints.gridx = 2;		
+		constraints.gridx = 3;		
 		constraints.gridwidth = 1;	
 		constraints.anchor = GridBagConstraints.LINE_END;
 		this.panel.add(openFileBtn, constraints);
@@ -103,8 +106,8 @@ public class Frame extends JFrame {
 		this.panel.add(new JLabel("Experiment title:"), constraints);
 		
 		constraints.gridx = 1;
-		constraints.gridwidth = 2;
-		this.experimentTitleField = new JTextField("Some experiment", 40);
+		constraints.gridwidth = 3;
+		this.experimentTitleField = new JTextField("Some experiment", TEXT_FIELD_SIZE);
 		this.panel.add(this.experimentTitleField, constraints);
 				
 		// Reference
@@ -118,8 +121,8 @@ public class Frame extends JFrame {
 		this.panel.add(new JLabel("Refrence:"), constraints);
 		
 		constraints.gridx = 1;
-		constraints.gridwidth = 2;
-		this.refrenceField = new JTextField("RPL0", 40);
+		constraints.gridwidth = 3;
+		this.refrenceField = new JTextField("RPL0", TEXT_FIELD_SIZE);
 		this.panel.add(this.refrenceField, constraints);
 		
 		// Control
@@ -133,31 +136,21 @@ public class Frame extends JFrame {
 		this.panel.add(new JLabel("Control:"), constraints);
 		
 		constraints.gridx = 1;
-		constraints.gridwidth = 2;
-		this.controllField = new JTextField("130404 RT 1,130404 RT 2,130404 RT 3", 40);
+		constraints.gridwidth = 3;
+		this.controllField = new JTextField("130404 RT 1,130404 RT 2,130404 RT 3", TEXT_FIELD_SIZE);
 		this.panel.add(this.controllField, constraints);
 		
 		
-		// Groups 
+		addGroupFields(4, this.group1NameField, this.group1TargetNameField);
+		addGroupFields(5, this.group2NameField, this.group2TargetNameField);
+		addGroupFields(6, this.group3NameField, this.group3TargetNameField);
+		addGroupFields(7, this.group4NameField, this.group4TargetNameField);
+		
+					
+		// PROCESS
 		constraints = new GridBagConstraints();
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
-		constraints.ipadx = 20;
-		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-		constraints.fill = GridBagConstraints.VERTICAL;
-		this.panel.add(new JLabel("Groups:"), constraints);
-		
-		constraints.gridx = 1;
-		constraints.gridwidth = 2;
-		this.groupsArea = new JTextArea(Frame.experimentDefinitionExample, 5, 40);
-		this.panel.add(this.groupsArea, constraints);
-		
-		
-		// 3 row
-		constraints = new GridBagConstraints();
-		constraints.gridx = 2;
-		constraints.gridy = 5;
+		constraints.gridx = 3;
+		constraints.gridy = 78;
 		constraints.gridwidth = 1;	
 		constraints.anchor = GridBagConstraints.LINE_END;
 		JButton proccessBtn = new JButton("Proccess");		
@@ -178,6 +171,42 @@ public class Frame extends JFrame {
 		this.panel.add(new PlotComponent(path), constraints);
 		pack();
 	}
+	
+	
+	private void addGroupFields(int rowNo, JTextField nameField, JTextField targetField) {
+		//	  NameLabel
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridx = 0;
+		constraints.gridy = rowNo;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		this.panel.add(new JLabel("Group Name:"), constraints);
+
+		//    NameField
+		constraints = new GridBagConstraints();
+		constraints.gridx = 1;
+		constraints.gridy = rowNo;
+		constraints.anchor = GridBagConstraints.LINE_START;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.ipadx = 80;
+		this.panel.add(nameField, constraints);
+
+		//    TargetNameLabel
+		constraints = new GridBagConstraints();
+		constraints.gridx = 2;
+		constraints.gridy = rowNo;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.insets = new Insets(0, 10, 0, 10);
+		this.panel.add(new JLabel("Targets:"), constraints);
+
+		//    TargetNameField
+		constraints = new GridBagConstraints();
+		constraints.gridx = 3;
+		constraints.gridy = rowNo;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		this.panel.add(targetField, constraints);
+	}
+	
 	
 	public Dimension getPreferredSize() { 
 		return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT); 
