@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -56,10 +57,34 @@ public class XLSReader {
 														
 					if (cell.getColumnIndex() == 0)
 						well = cell.getStringCellValue();
-					else if (cell.getColumnIndex() == 1 && cell.getCellType() == Cell.CELL_TYPE_STRING)
-						sampleName = cell.getStringCellValue();
-					else if (cell.getColumnIndex() == 2 && cell.getCellType() == Cell.CELL_TYPE_STRING)
-						targetName = cell.getStringCellValue();
+					else if (cell.getColumnIndex() == 1)
+						if (cell.getCellType() == Cell.CELL_TYPE_STRING)
+							sampleName = cell.getStringCellValue();
+						else {
+							double cellValue = -1;
+							try {
+								cellValue = cell.getNumericCellValue();
+								sampleName = String.valueOf((int) Math.round(cellValue));
+							} catch (Exception e) {
+								System.out.printf("Unable cast sampleName: '%d' to integer", cellValue);
+								e.printStackTrace();
+							}
+						}							
+					
+					else if (cell.getColumnIndex() == 2) 
+						if (cell.getCellType() == Cell.CELL_TYPE_STRING)
+							targetName = cell.getStringCellValue();
+						else {
+							double cellValue = -1;
+							try {
+								cellValue = cell.getNumericCellValue();
+								targetName = String.valueOf((int) Math.round(cellValue));
+							} catch (Exception e) {
+								System.out.printf("Unable cast targetName: '%d' to integer", cellValue);
+								e.printStackTrace();
+							}
+						}
+					
 					else if (cell.getColumnIndex() == 9 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 						cт = cell.getNumericCellValue();									
 						break;
