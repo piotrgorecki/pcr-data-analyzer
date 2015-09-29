@@ -29,6 +29,7 @@ public class Experiment {
 	}
 	
 	public void addSample(String wellId, String sampleName, String targetName, Double cт) {
+		System.out.printf("addSample: wellId: %s, sampleName: %s, targetName: %s, ct: %s\n", wellId, sampleName, targetName, cт.toString());
 		
 		if (this.experimentDefinition.isGroupForSampleName(sampleName)) {
 			String groupName = this.experimentDefinition.getGroupNameForSampleName(sampleName);

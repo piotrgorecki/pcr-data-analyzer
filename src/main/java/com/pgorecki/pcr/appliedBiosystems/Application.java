@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import com.pgorecki.pcr.iface.Frame;
 
 public class Application {
+	
+	final static String VERSION = "0.4";
 
 	public static void main(String[] args) throws IOException {
 		
 		EventQueue.invokeLater(new Runnable() {			
 			public void run() {
-				new Frame();
+				new Frame(VERSION);
 			}
 		});
+		
 	}
 
 
-	public static Experiment Process(ExperimentDefinition experimentDefinition, String xlsPath) {
-		XLSReader xls = new XLSReader(xlsPath);
-		Experiment experiment = xls.parseExperiment("Results", experimentDefinition);
-
+	public static Experiment Process(Experiment experiment) {		
 		for (Group group : experiment.getGroupList()) {
 			if (group.isReference())
 				continue;						

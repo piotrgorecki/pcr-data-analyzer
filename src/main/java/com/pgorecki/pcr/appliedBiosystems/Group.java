@@ -86,6 +86,7 @@ public class Group {
 	}
 	
 	public Double calculateAvg(String sampleName) {
+		System.out.println("sampleName: " + sampleName);
 		Counterpart counterpart = getCounterpartForSampleName(sampleName);		
 		SummaryStatistics summaryStatistics = new SummaryStatistics();
 		

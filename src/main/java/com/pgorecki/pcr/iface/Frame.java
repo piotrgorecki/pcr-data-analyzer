@@ -23,112 +23,92 @@ import com.pgorecki.pcr.appliedBiosystems.Application;
 import com.pgorecki.pcr.appliedBiosystems.Experiment;
 import com.pgorecki.pcr.appliedBiosystems.ExperimentDefinition;
 import com.pgorecki.pcr.appliedBiosystems.Plotter;
+import com.pgorecki.pcr.appliedBiosystems.XLSReader;
 
 public class Frame extends JFrame {
 	
-	private JLabel xlsPathLabel;
-	private JPanel panel = new JPanel();
-	private JTextField experimentTitleField;
-	private JTextField refrenceField;
-	private JTextField controllField;
-	private JTextField group1NameField = new JTextField("3h");
-	private JTextField group2NameField = new JTextField("6h");
-	private JTextField group3NameField = new JTextField();
-	private JTextField group4NameField = new JTextField();
-	private JTextField group1TargetNameField = new JTextField("130404 RT 4,130404 RT 5,130404 RT 6");
-	private JTextField group2TargetNameField = new JTextField("130404 RT 7,130404 RT 8,130404 RT 9");
-	private JTextField group3TargetNameField = new JTextField();
-	private JTextField group4TargetNameField = new JTextField();
-	private JButton proccessBtn = new JButton("Proccess");
-	
+	private final short IPAD_LABEL = 20;
 	private final short TEXT_FIELD_SIZE = 50;	
-	private static final int DEFAULT_WIDTH = 1400;
-	private static final int DEFAULT_HEIGHT = 800;
+	private static final int DEFAULT_WIDTH = 1500;
+	private static final int DEFAULT_HEIGHT = 900;
 	private static final long serialVersionUID = 1L;
 	
+	private int gridy = -1; 
+	private JLabel xlsPathLabel1 = new JLabel();
+	private JLabel xlsPathLabel2 = new JLabel();
+	private JLabel xlsPathLabel3 = new JLabel();
+	private JPanel panel = new JPanel();
+	private JTextField experimentTitleField = new JTextField("Some experiment", TEXT_FIELD_SIZE);
+	private JTextField refrenceField = new JTextField("RPL0", TEXT_FIELD_SIZE);
+	private JTextField controlField = new JTextField("1,13,25", TEXT_FIELD_SIZE);
+	private JTextField group1NameField = new JTextField("3h");
+	private JTextField group2NameField = new JTextField("6h");
+	private JTextField group3NameField = new JTextField("24");
+	private JTextField group4NameField = new JTextField();
+	private JTextField group1TargetNameField = new JTextField("4,5,6");
+	private JTextField group2TargetNameField = new JTextField("16,17,18");
+	private JTextField group3TargetNameField = new JTextField("28,29,30");
+	private JTextField group4TargetNameField = new JTextField();
+	private JButton processBtn = new JButton("Process");	
+	
 
-	public Frame() {
+	public Frame(String version) {
 		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("PCR Analyzer (v 0.3)");
+		setTitle("qPCR Analyzer (v " + version + ")");
 		setLocationByPlatform(true);
 		setVisible(true);
 		
+		// Set icon
 		URL path = getClass().getClassLoader().getResource("ico.png");
 		Image icon = new ImageIcon(path).getImage();		
 		setIconImage(icon);
 		
+		// Build JPanel with GridBagLayout
 		this.panel = new JPanel(new GridBagLayout());
 		GridBagConstraints constraints;
 		
-		// 1 row
-		constraints = new GridBagConstraints();
-		constraints.gridy = 0;
-		constraints.gridx = 0;
-		constraints.gridwidth = 1;
-		constraints.ipadx = 20;
-		constraints.fill = GridBagConstraints.VERTICAL;
-		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-		JLabel xlsLabel = new JLabel("XLS file:");		
-		this.panel.add(xlsLabel, constraints);
-		
-		constraints = new GridBagConstraints();
-		constraints.gridy = 0;
-		constraints.gridx = 1;
-		constraints.gridwidth = 3;		
-		constraints.anchor = GridBagConstraints.LINE_START;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		this.xlsPathLabel = new JLabel();
-		this.xlsPathLabel.setSize(TEXT_FIELD_SIZE, 20);
-		this.panel.add(this.xlsPathLabel, constraints);
-		
+		// 1 row - Input file		
+		addChoseFileRow(this.xlsPathLabel1);
 
-		JButton openFileBtn = new JButton("Choose a file");
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new File("."));			
-		openFileBtn.addActionListener(new OpenFileAction(chooser));		
-		constraints = new GridBagConstraints();
-		constraints.gridy = 0;
-		constraints.gridx = 3;		
-		constraints.gridwidth = 1;	
-		constraints.anchor = GridBagConstraints.LINE_END;
-		this.panel.add(openFileBtn, constraints);
-
+		// 2 row - Input file
+		addChoseFileRow(this.xlsPathLabel2);
 		
-		// Experiment title
+		// 3 row - Input file
+		addChoseFileRow(this.xlsPathLabel3);
+					
+		// 4 row - Experiment title
 		constraints = new GridBagConstraints();
 		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridy = nextRow();
 		constraints.gridwidth = 1;
-		constraints.ipadx = 20;
+		constraints.ipadx = IPAD_LABEL;
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		constraints.fill = GridBagConstraints.VERTICAL;
 		this.panel.add(new JLabel("Experiment title:"), constraints);
 		
 		constraints.gridx = 1;
 		constraints.gridwidth = 3;
-		this.experimentTitleField = new JTextField("Some experiment", TEXT_FIELD_SIZE);
 		this.panel.add(this.experimentTitleField, constraints);
 				
-		// Reference
+		// 5 row - Reference
 		constraints = new GridBagConstraints();
 		constraints.gridx = 0;
-		constraints.gridy = 2;
+		constraints.gridy = nextRow();
 		constraints.gridwidth = 1;
-		constraints.ipadx = 20;
+		constraints.ipadx = IPAD_LABEL;
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
 		constraints.fill = GridBagConstraints.VERTICAL;
 		this.panel.add(new JLabel("Refrence:"), constraints);
 		
 		constraints.gridx = 1;
 		constraints.gridwidth = 3;
-		this.refrenceField = new JTextField("RPL0", TEXT_FIELD_SIZE);
 		this.panel.add(this.refrenceField, constraints);
 		
-		// Control
+		// 6 row - Control
 		constraints = new GridBagConstraints();
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = nextRow();
 		constraints.gridwidth = 1;
 		constraints.ipadx = 20;
 		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -137,33 +117,38 @@ public class Frame extends JFrame {
 		
 		constraints.gridx = 1;
 		constraints.gridwidth = 3;
-		this.controllField = new JTextField("130404 RT 1,130404 RT 2,130404 RT 3", TEXT_FIELD_SIZE);
-		this.panel.add(this.controllField, constraints);
+		this.panel.add(this.controlField, constraints);
 		
+		// 7 row - Group
+		addGroupFields(this.group1NameField, this.group1TargetNameField);
 		
-		addGroupFields(4, this.group1NameField, this.group1TargetNameField);
-		addGroupFields(5, this.group2NameField, this.group2TargetNameField);
-		addGroupFields(6, this.group3NameField, this.group3TargetNameField);
-		addGroupFields(7, this.group4NameField, this.group4TargetNameField);
+		// 8 row - Group
+		addGroupFields(this.group2NameField, this.group2TargetNameField);
 		
-					
-		// PROCESS
+		// 9 row - Group
+		addGroupFields(this.group3NameField, this.group3TargetNameField);
+		
+		// 10 row - Group
+		addGroupFields(this.group4NameField, this.group4TargetNameField);
+							
+		// 11 row - Process button
 		constraints = new GridBagConstraints();
 		constraints.gridx = 3;
-		constraints.gridy = 8;
+		constraints.gridy = nextRow();
 		constraints.gridwidth = 1;	
 		constraints.anchor = GridBagConstraints.LINE_END;		
-		this.proccessBtn.setEnabled(false);
-		this.proccessBtn.addActionListener(new ProccessAction());
-		this.panel.add(proccessBtn, constraints);
+		this.processBtn.setEnabled(false);
+		this.processBtn.addActionListener(new ProccessAction());
+		this.panel.add(processBtn, constraints);
 		
+		// Add panel into the frame
 		add(this.panel);
 	}
 	
-	public void addPlot(String path, int gridx) {
+	public void addPlot(String path, int gridx, int gridy) {
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = gridx;
-		constraints.gridy = 9;
+		constraints.gridy = gridy;
 		constraints.gridwidth = 4;
 		constraints.insets = new Insets(20,0,0,0);
 		constraints.fill = GridBagConstraints.BOTH;
@@ -173,11 +158,13 @@ public class Frame extends JFrame {
 	}
 	
 	
-	private void addGroupFields(int rowNo, JTextField nameField, JTextField targetField) {
+	private void addGroupFields(JTextField nameField, JTextField targetField) {		
+		int gridy = nextRow();
+		
 		//	  NameLabel
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridx = 0;
-		constraints.gridy = rowNo;
+		constraints.gridy = gridy;
 		constraints.anchor = GridBagConstraints.LINE_START;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		this.panel.add(new JLabel("Group Name:"), constraints);
@@ -185,7 +172,7 @@ public class Frame extends JFrame {
 		//    NameField
 		constraints = new GridBagConstraints();
 		constraints.gridx = 1;
-		constraints.gridy = rowNo;
+		constraints.gridy = gridy;
 		constraints.anchor = GridBagConstraints.LINE_START;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.ipadx = 80;
@@ -194,7 +181,7 @@ public class Frame extends JFrame {
 		//    TargetNameLabel
 		constraints = new GridBagConstraints();
 		constraints.gridx = 2;
-		constraints.gridy = rowNo;
+		constraints.gridy = gridy;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.insets = new Insets(0, 10, 0, 10);
 		this.panel.add(new JLabel("Targets:"), constraints);
@@ -202,9 +189,50 @@ public class Frame extends JFrame {
 		//    TargetNameField
 		constraints = new GridBagConstraints();
 		constraints.gridx = 3;
-		constraints.gridy = rowNo;
+		constraints.gridy = gridy;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		this.panel.add(targetField, constraints);
+		this.panel.add(targetField, constraints);		
+	}
+	
+	private void addChoseFileRow(JLabel label) {		
+		int gridy = nextRow();
+		// Label
+		GridBagConstraints constraints = new GridBagConstraints();
+		constraints.gridy = gridy;
+		constraints.gridx = 0;
+		constraints.gridwidth = 1;
+		constraints.ipadx = IPAD_LABEL;
+		constraints.fill = GridBagConstraints.VERTICAL;
+		constraints.anchor = GridBagConstraints.FIRST_LINE_START;
+		JLabel xlsLabel = new JLabel("XLS file:");		
+		this.panel.add(xlsLabel, constraints);
+
+		// Label which is chosen file path
+		constraints = new GridBagConstraints();
+		constraints.gridy = gridy;
+		constraints.gridx = 1;
+		constraints.gridwidth = 3;		
+		constraints.anchor = GridBagConstraints.LINE_START;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		label.setSize(TEXT_FIELD_SIZE, 20);
+		this.panel.add(label, constraints);
+
+		// Button
+		JButton openFileBtn = new JButton("Choose a file");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("."));			
+		openFileBtn.addActionListener(new OpenFileAction(chooser, label));		
+		constraints = new GridBagConstraints();
+		constraints.gridy = gridy;
+		constraints.gridx = 3;		
+		constraints.gridwidth = 1;	
+		constraints.anchor = GridBagConstraints.LINE_END;
+		this.panel.add(openFileBtn, constraints);
+	}
+	
+	private int nextRow() {
+		this.gridy += 1;
+		return this.gridy;
 	}
 	
 	
@@ -217,26 +245,47 @@ public class Frame extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (!xlsPathLabel.getText().isEmpty()) {
-				ExperimentDefinition experimentDefinition = new ExperimentDefinition(experimentTitleField.getText(), refrenceField.getText(), controllField.getText());
+			if (!xlsPathLabel1.getText().isEmpty() || !xlsPathLabel2.getText().isEmpty() || !xlsPathLabel3.getText().isEmpty()) {
+				ExperimentDefinition experimentDefinition = new ExperimentDefinition(experimentTitleField.getText(), refrenceField.getText(), controlField.getText());
 				
 				addGroup(experimentDefinition, group1NameField, group1TargetNameField);
 				addGroup(experimentDefinition, group2NameField, group2TargetNameField);
 				addGroup(experimentDefinition, group3NameField, group3TargetNameField);
 				addGroup(experimentDefinition, group4NameField, group4TargetNameField);
 				
+				Experiment experiment = new Experiment(experimentDefinition);
 				
-				Experiment experiment = Application.Process(experimentDefinition, xlsPathLabel.getText());
+				if (!xlsPathLabel1.getText().isEmpty()) {
+					XLSReader xls = new XLSReader(xlsPathLabel1.getText());
+					xls.parseExperiment("Results", experiment);
+				}
+					
+				
+				if (!xlsPathLabel2.getText().isEmpty()) {
+					XLSReader xls = new XLSReader(xlsPathLabel2.getText());
+					xls.parseExperiment("Results", experiment);
+				}
+				
+				if (!xlsPathLabel3.getText().isEmpty()) {
+					XLSReader xls = new XLSReader(xlsPathLabel3.getText());
+					xls.parseExperiment("Results", experiment);
+					
+				}
+				
+				Application.Process(experiment);
+				
+								
 				try {
+					int gridy = nextRow();
 					String meanΔΔcтPlotPath = Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment));
 					System.out.println(meanΔΔcтPlotPath);
-					addPlot(meanΔΔcтPlotPath, 0);
+					addPlot(meanΔΔcтPlotPath, 0, gridy);
 					
 					String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment));
 					System.out.println(rqPlotPath);
-					addPlot(rqPlotPath, 4);
-					xlsPathLabel.setText(rqPlotPath);
-					proccessBtn.setEnabled(false);
+					addPlot(rqPlotPath, 4, gridy);
+					xlsPathLabel1.setText(rqPlotPath);
+					processBtn.setEnabled(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}						
@@ -257,9 +306,11 @@ public class Frame extends JFrame {
 	private class OpenFileAction implements ActionListener {
 		
 		private JFileChooser chooser;
+		private JLabel label;
 		
-		public OpenFileAction(JFileChooser chooser) {
+		public OpenFileAction(JFileChooser chooser, JLabel label) {
 			this.chooser = chooser;
+			this.label = label;
 		}
 		
 		@Override
@@ -269,8 +320,8 @@ public class Frame extends JFrame {
 			int result = this.chooser.showOpenDialog(panel);
 
 			if (result == JFileChooser.APPROVE_OPTION) {
-				xlsPathLabel.setText(this.chooser.getSelectedFile().getPath());
-				proccessBtn.setEnabled(true);
+				label.setText(this.chooser.getSelectedFile().getPath());
+				processBtn.setEnabled(true);
 			}
 		}
 	}

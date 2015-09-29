@@ -7,7 +7,6 @@ import java.util.Iterator;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -29,8 +28,7 @@ public class XLSReader {
 		this.xlsPath = xlsPath;
 	}
 	
-	public Experiment parseExperiment(String sheetName, ExperimentDefinition experimentDefinition) {
-		Experiment experiment = new Experiment(experimentDefinition);
+	public Experiment parseExperiment(String sheetName, Experiment experiment) {		
 		FileInputStream fis = null;
 		
 		try {
