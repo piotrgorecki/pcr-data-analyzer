@@ -60,7 +60,7 @@ public class Reporter {
 			    System.out.println("group: " + group.getName());
 			    
 			    
-			    if (!group.isControll() && group.getΔcтList() != null) {
+			    if (group.getΔcтList() != null) {
 			    
 			    	Iterator<String> sampleNameList = group.getSampleNameList().iterator();
 			    	Iterator<Double> ΔcтList = group.getΔcтList().iterator();
