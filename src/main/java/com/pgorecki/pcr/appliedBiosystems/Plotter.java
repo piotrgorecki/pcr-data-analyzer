@@ -42,7 +42,7 @@ public class Plotter {
 		return dataset;
 	}
 	
-	public static String plot(Experiment experiment, String xAxis, String yAxis, String outFileName, CategoryDataset dataset) throws IOException {	
+	public static String plot(Experiment experiment, String xAxis, String yAxis, String outFileName, CategoryDataset dataset, String outDir) throws IOException {	
 		CategoryAxis oxAxis = new CategoryAxis(xAxis);
 		ValueAxis oyAxis = new NumberAxis(yAxis);
 		CategoryItemRenderer renderer = new StatisticalBarRenderer();
@@ -52,10 +52,22 @@ public class Plotter {
         plot.setOrientation(PlotOrientation.VERTICAL);
 
         JFreeChart chart = new JFreeChart(experiment.getExperimentDefinition().getExperimentName(), JFreeChart.DEFAULT_TITLE_FONT, plot, true);        
-                
-        String path = JarPath.getPath() + outFileName + ".jpeg";
-        File file = new File(path); 
-        ChartUtilities.saveChartAsJPEG(file , chart , Plotter.DEFAULT_WIDTH , Plotter.DEFAULT_HEIGHT);
+        
+        
+        String path = "";        
+        File dir = new File(outDir);
+        boolean success = true;
+        if (!dir.isDirectory())
+        	success = (dir).mkdirs();
+        
+        if (success) {
+        	path = outDir + File.separator + outFileName + ".jpeg";
+        	File file = new File(path); 
+            ChartUtilities.saveChartAsJPEG(file , chart , Plotter.DEFAULT_WIDTH , Plotter.DEFAULT_HEIGHT);
+        } else {
+        	System.out.println("Cannot create directory for *.jpeg: " + outDir);
+        }
+                        
         return path;
 	}
 

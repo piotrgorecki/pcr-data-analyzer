@@ -276,15 +276,16 @@ public class Frame extends JFrame {
 				}
 				
 				Application.Process(experiment);
-				
-								
+
+				String outDir = JarPath.getPath() + experiment.getName();								
 				try {
+					
 					int gridy = nextRow();
-					String meanΔΔcтPlotPath = Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment));
+					String meanΔΔcтPlotPath = Plotter.plot(experiment, "Group", "Mean ΔΔcт", "meanDDct", Plotter.getDatasetMeanΔΔcт(experiment), outDir);
 					System.out.println(meanΔΔcтPlotPath);
 					addPlot(meanΔΔcтPlotPath, 0, gridy);
 					
-					String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment));
+					String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment), outDir);
 					System.out.println(rqPlotPath);
 					addPlot(rqPlotPath, 4, gridy);
 					xlsPathLabel1.setText(rqPlotPath);
@@ -294,7 +295,7 @@ public class Frame extends JFrame {
 				}
 				
 				Reporter reporter = new Reporter(experiment);
-				reporter.makeReport(JarPath.getPath() + "report.xls");
+				reporter.makeReport(outDir + File.separator + "report.xls");
 				
 			} else
 				System.out.println("XLS file didn't chose");
