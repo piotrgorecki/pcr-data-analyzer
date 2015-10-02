@@ -41,7 +41,7 @@ public class Experiment {
 			}
 			else {
 				Boolean isReference = this.experimentDefinition.isTargetNameReference(targetName);
-				Boolean isControl = this.experimentDefinition.isControllGroup(sampleName);
+				Boolean isControl = this.experimentDefinition.isControlGroup(sampleName);
 				TargetName oTargetName = new TargetName(targetName, isReference);
 				group = new Group(groupName, isControl, oTargetName);
 				this.groupList.add(group);

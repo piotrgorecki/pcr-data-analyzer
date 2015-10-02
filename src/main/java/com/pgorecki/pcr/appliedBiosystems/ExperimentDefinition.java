@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class ExperimentDefinition {
 
-	final public static String CONTROL_GROUP_NAME = "controll";
+	final public static String CONTROL_GROUP_NAME = "control";
 
 	private String experimentName;
 	private String reference;
@@ -33,7 +33,7 @@ public class ExperimentDefinition {
 	public String getReference() {
 		return this.reference;
 	}
-	public ArrayList<String> getControllGroup() {
+	public ArrayList<String> getControlGroup() {
 		return this.controlGroup;
 	}
 	public ArrayList<HashMap<String, String[]>> getGroupList() {
@@ -73,8 +73,8 @@ public class ExperimentDefinition {
 		return this.reference.equals(targetName);
 	}
 
-	public Boolean isControllGroup(String sampleName) {
-		return this.getControllGroup().contains(sampleName);
+	public Boolean isControlGroup(String sampleName) {
+		return this.getControlGroup().contains(sampleName);
 	}
 
 	public String[] getSampleNameListForGroup(String groupName) {
@@ -85,7 +85,7 @@ public class ExperimentDefinition {
 		return new String[] {};													
 	}
 
-	public String[] getSampleNameListForControll() {
+	public String[] getSampleNameListForControl() {
 		return this.controlGroup.toArray(new String[this.controlGroup.size()]);
 	}
 

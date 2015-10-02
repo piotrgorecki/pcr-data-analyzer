@@ -8,14 +8,14 @@ public class Group {
 	
 	private String name;
 	private TargetName targetName;
-	private Boolean isControll;
+	private Boolean isControl;
 	private ArrayList<Counterpart> counterpartList = new ArrayList<Counterpart>();
 	private ArrayList<String> sampleNameList = new ArrayList<String>();
 	private Double meanΔΔcт;
 	private Double semΔΔcт;
 	private Double meanRq;
 	private Double semRq;
-	private double avgΔcтControll;
+	private double avgΔcтControl;
 	private ArrayList<Double> ΔcтList;
 	private ArrayList<Double> ΔΔcтList;
 	private ArrayList<Double> rqList;
@@ -50,8 +50,8 @@ public class Group {
 	public ArrayList<String> getSampleNameList() {
 		return this.sampleNameList;
 	}
-	public Boolean isControll() {
-		return this.isControll;
+	public Boolean isControl() {
+		return this.isControl;
 	}
 	public Boolean isReference() {
 		return this.targetName.getIsReference();
@@ -62,11 +62,11 @@ public class Group {
 	public void setMeanΔΔcт(Double meanΔΔcт) {
 		this.meanΔΔcт = meanΔΔcт;
 	}
-	public double getAvgΔcтControll() {
-		return avgΔcтControll;
+	public double getAvgΔcтControl() {
+		return avgΔcтControl;
 	}
-	public void setAvgΔcтControll(double avgΔcтControll) {
-		this.avgΔcтControll = avgΔcтControll;
+	public void setAvgΔcтControl(double avgΔcтControl) {
+		this.avgΔcтControl = avgΔcтControl;
 	}
 	public ArrayList<Double> getΔΔcтList() {
 		return ΔΔcтList;
@@ -88,11 +88,11 @@ public class Group {
 	}
 	
 	
-	public Group(String name, Boolean isControll, TargetName targetName) {
+	public Group(String name, Boolean isControl, TargetName targetName) {
 		super();
 		this.name = name;
 		this.targetName = targetName;
-		this.isControll = isControll;
+		this.isControl = isControl;
 	}
 	
 	public void addSample(Well well, String sampleName) {

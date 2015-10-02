@@ -33,16 +33,16 @@ public class Application {
 
 			System.out.println("\n----------- " + groupName + ", " + targetName + " ----------- :");
 
-			ArrayList<Double> ΔcтListControll = processΔcт("controll", targetName, experiment);
-			double avgΔcтControll = mean(ΔcтListControll);
-			group.setAvgΔcтControll(avgΔcтControll);
-			int listSize = ΔcтListControll.size();
+			ArrayList<Double> ΔcтListControl = processΔcт("control", targetName, experiment);
+			double avgΔcтControl = mean(ΔcтListControl);
+			group.setAvgΔcтControl(avgΔcтControl);
+			int listSize = ΔcтListControl.size();
 
 			ArrayList<Double> ΔcтList;
 
-			if (group.isControll()) {
+			if (group.isControl()) {
 				ArrayList<Double> clone = new ArrayList<>(listSize);
-				for (Double i : ΔcтListControll) clone.add(i);
+				for (Double i : ΔcтListControl) clone.add(i);
 				ΔcтList = clone;
 			}
 			else
@@ -53,7 +53,7 @@ public class Application {
 			ArrayList<Double> rqList = new ArrayList<>(listSize);
 
 			for (Double Δcт : ΔcтList) {
-				Double ΔΔcт = Δcт - avgΔcтControll;
+				Double ΔΔcт = Δcт - avgΔcтControl;
 				ΔΔcтList.add(ΔΔcт);
 				System.out.print("ΔΔcт: " + ΔΔcт + ", ");
 				Double rqValue = rq(ΔΔcт);
@@ -91,13 +91,13 @@ public class Application {
 
 	private static ArrayList<Double> processΔcт(String groupName, String targetName, Experiment experiment) {		
 		ExperimentDefinition experimentDefinition = experiment.getExperimentDefinition();
-		Boolean isControll = groupName.equals(ExperimentDefinition.CONTROL_GROUP_NAME);
+		Boolean isControl = groupName.equals(ExperimentDefinition.CONTROL_GROUP_NAME);
 
 		String[] sampleNameList;
-		if (!isControll)
+		if (!isControl)
 			sampleNameList = experimentDefinition.getSampleNameListForGroup(groupName);
 		else
-			sampleNameList = experimentDefinition.getSampleNameListForControll();						
+			sampleNameList = experimentDefinition.getSampleNameListForControl();						
 
 		ArrayList<Double> ΔcтList = new ArrayList<>(sampleNameList.length);
 
