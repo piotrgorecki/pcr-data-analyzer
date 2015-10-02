@@ -288,7 +288,6 @@ public class Frame extends JFrame {
 					String rqPlotPath = Plotter.plot(experiment, "Group", "RQ", "rq", Plotter.getDatasetRQ(experiment), outDir);
 					System.out.println(rqPlotPath);
 					addPlot(rqPlotPath, 4, gridy);
-					xlsPathLabel1.setText(rqPlotPath);
 					processBtn.setEnabled(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
