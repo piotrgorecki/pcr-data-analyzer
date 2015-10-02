@@ -15,6 +15,10 @@ public class Group {
 	private Double semΔΔcт;
 	private Double meanRq;
 	private Double semRq;
+	private double avgΔcтControll;
+	private ArrayList<Double> ΔcтList;
+	private ArrayList<Double> ΔΔcтList;
+	private ArrayList<Double> rqList;
 	
 	public Double getSemRq() {
 		return semRq;
@@ -58,7 +62,32 @@ public class Group {
 	public void setMeanΔΔcт(Double meanΔΔcт) {
 		this.meanΔΔcт = meanΔΔcт;
 	}
-		
+	public double getAvgΔcтControll() {
+		return avgΔcтControll;
+	}
+	public void setAvgΔcтControll(double avgΔcтControll) {
+		this.avgΔcтControll = avgΔcтControll;
+	}
+	public ArrayList<Double> getΔΔcтList() {
+		return ΔΔcтList;
+	}
+	public void setΔΔcтList(ArrayList<Double> δΔcтList) {
+		ΔΔcтList = δΔcтList;
+	}
+	public ArrayList<Double> getRqList() {
+		return rqList;
+	}
+	public void setRqList(ArrayList<Double> rqList) {
+		this.rqList = rqList;
+	}
+	public ArrayList<Double> getΔcтList() {
+		return ΔcтList;
+	}
+	public void setΔcтList(ArrayList<Double> δcтList) {
+		ΔcтList = δcтList;
+	}
+	
+	
 	public Group(String name, Boolean isControll, TargetName targetName) {
 		super();
 		this.name = name;
@@ -94,6 +123,10 @@ public class Group {
 			summaryStatistics.addValue(well.getCт());
 		
 		return summaryStatistics.getMean();			
+	}
+	
+	public Boolean hasSamples() {
+		return !this.sampleNameList.isEmpty();
 	}
 	
 	

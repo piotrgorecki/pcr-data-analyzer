@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 import com.pgorecki.pcr.iface.Frame;
 
+import utils.JarPath;
+
 public class Application {
 	
-	final static String VERSION = "0.4";
+	final static String VERSION = "0.5";
 
 	public static void main(String[] args) throws IOException {
 		
@@ -32,7 +34,8 @@ public class Application {
 			System.out.println("\n----------- " + groupName + ", " + targetName + " ----------- :");
 
 			ArrayList<Double> ΔcтListControll = processΔcт("controll", targetName, experiment);
-			Double avgΔcтControll = mean(ΔcтListControll);
+			double avgΔcтControll = mean(ΔcтListControll);
+			group.setAvgΔcтControll(avgΔcтControll);
 			int listSize = ΔcтListControll.size();
 
 			ArrayList<Double> ΔcтList;
@@ -57,6 +60,10 @@ public class Application {
 				System.out.println("rqValue: " + rqValue);
 				rqList.add(rqValue);
 			}
+			
+			group.setΔcтList(ΔcтList);
+			group.setΔΔcтList(ΔΔcтList);
+			group.setRqList(rqList);
 
 			Double avgΔΔcт = mean(ΔΔcтList);
 			group.setMeanΔΔcт(avgΔΔcт);
@@ -75,6 +82,7 @@ public class Application {
 			System.out.println("semRq: " + semRq);								
 		}
 		System.out.println("Processed");
+		
 		return experiment;
 	}
 

@@ -23,7 +23,10 @@ import com.pgorecki.pcr.appliedBiosystems.Application;
 import com.pgorecki.pcr.appliedBiosystems.Experiment;
 import com.pgorecki.pcr.appliedBiosystems.ExperimentDefinition;
 import com.pgorecki.pcr.appliedBiosystems.Plotter;
+import com.pgorecki.pcr.appliedBiosystems.Reporter;
 import com.pgorecki.pcr.appliedBiosystems.XLSReader;
+
+import utils.JarPath;
 
 public class Frame extends JFrame {
 	
@@ -43,7 +46,7 @@ public class Frame extends JFrame {
 	private JTextField controlField = new JTextField("1,13,25", TEXT_FIELD_SIZE);
 	private JTextField group1NameField = new JTextField("3h");
 	private JTextField group2NameField = new JTextField("6h");
-	private JTextField group3NameField = new JTextField("24");
+	private JTextField group3NameField = new JTextField("24h");
 	private JTextField group4NameField = new JTextField();
 	private JTextField group1TargetNameField = new JTextField("4,5,6");
 	private JTextField group2TargetNameField = new JTextField("16,17,18");
@@ -288,7 +291,11 @@ public class Frame extends JFrame {
 					processBtn.setEnabled(false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}						
+				}
+				
+				Reporter reporter = new Reporter(experiment);
+				reporter.makeReport(JarPath.getPath() + "report.xls");
+				
 			} else
 				System.out.println("XLS file didn't chose");
 		}
