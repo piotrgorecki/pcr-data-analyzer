@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import com.pgorecki.pcr.iface.Frame;
 
-import utils.JarPath;
 
 public class Application {
 	

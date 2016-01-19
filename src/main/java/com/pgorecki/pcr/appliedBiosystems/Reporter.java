@@ -2,7 +2,6 @@ package com.pgorecki.pcr.appliedBiosystems;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.poi.EncryptedDocumentException;

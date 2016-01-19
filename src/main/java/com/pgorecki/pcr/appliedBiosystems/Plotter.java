@@ -15,7 +15,6 @@ import org.jfree.chart.renderer.category.StatisticalBarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 
-import utils.JarPath;
 
 public class Plotter {
 	
