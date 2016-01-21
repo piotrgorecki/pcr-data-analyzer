@@ -32,8 +32,10 @@ public class Frame extends JFrame {
 
 	private final short IPAD_LABEL = 20;
 	private final short TEXT_FIELD_SIZE = 50;
-	private static final int DEFAULT_WIDTH = 1500;
-	private static final int DEFAULT_HEIGHT = 900;
+	private static final int DEFAULT_WIDTH = 750;
+	private static final int DEFAULT_HEIGHT = 300;
+	private static final int BIG_WIDTH = 1500;
+	private static final int BIG_HEIGHT = 900;
 	private static final long serialVersionUID = 1L;
 
 	private int gridy = -1;
@@ -290,6 +292,8 @@ public class Frame extends JFrame {
 
 				Reporter reporter = new Reporter(experiment);
 				reporter.makeReport(outDir + File.separator + "report.xls");
+				
+				setSize(BIG_WIDTH, BIG_HEIGHT);
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
