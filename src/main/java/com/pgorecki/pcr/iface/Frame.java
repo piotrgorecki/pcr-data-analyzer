@@ -42,11 +42,11 @@ public class Frame extends JFrame {
 	private JLabel xlsPathLabel3 = new JLabel();
 	private JPanel panel = new JPanel();
 	private JTextField experimentTitleField = new JTextField("Some experiment", TEXT_FIELD_SIZE);
-	private JTextField refrenceField = new JTextField("RPL0", TEXT_FIELD_SIZE);
+	private JTextField refrenceField = new JTextField("R1", TEXT_FIELD_SIZE);
 	private JTextField controlField = new JTextField("1,2,3", TEXT_FIELD_SIZE);
-	private JTextField group1NameField = new JTextField("ATPgS");
-	private JTextField group2NameField = new JTextField("MRS");
-	private JTextField group3NameField = new JTextField("NECA");
+	private JTextField group1NameField = new JTextField("G1");
+	private JTextField group2NameField = new JTextField("G2");
+	private JTextField group3NameField = new JTextField("G3");
 	private JTextField group4NameField = new JTextField();
 	private JTextField group1TargetNameField = new JTextField("4,5,6");
 	private JTextField group2TargetNameField = new JTextField("7,8,9");
@@ -185,7 +185,7 @@ public class Frame extends JFrame {
 		constraints.gridy = gridy;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.insets = new Insets(0, 10, 0, 10);
-		this.panel.add(new JLabel("Targets:"), constraints);
+		this.panel.add(new JLabel("Samples:"), constraints);
 
 		// TargetNameField
 		constraints = new GridBagConstraints();
@@ -307,9 +307,9 @@ public class Frame extends JFrame {
 				experimentDefinition.addGroup(groupName.getText(), targetNames.getText());
 			else
 				if (groupNameIsFilled && !targetNamesIsFilled)
-					throw new Exception("Group Name is filled but Targets is not");
+					throw new Exception("Group Name is filled but Samples is not");
 				else if (!groupNameIsFilled && targetNamesIsFilled)
-					throw new Exception("Targets is filled but Group Name is not");
+					throw new Exception("Samples is filled but Group Name is not");
 		}
 
 		private Boolean isFilled(JTextField field) {

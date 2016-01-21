@@ -33,12 +33,12 @@ public class Application {
 
 		boolean res = expDefConList.removeAll(expConList);
 		if (!res || !expDefConList.isEmpty())
-			throw new Exception("In XLS input file there is no control group of: \"" + expDefConList + "\"");
+			throw new Exception("In XLS input file there is no control group of: \"" + expDefConList + "\".");
 
 
 		// Are expected references in xls input file?
 		if (!experiment.hasReference())
-			throw new Exception("In XLS input file there is no reference called: \"" + experimentDefinition.getReference() + "\"");
+			throw new Exception("In XLS input file there is no reference called: \"" + experimentDefinition.getReference() + "\".");
 
 
 		// Are targets per group in xls input file (as Sample Name)?
@@ -60,9 +60,9 @@ public class Application {
 					targetNameDefArr.removeAll(sampleNameExperimentList);
 
 					if (! targetNameDefArr.isEmpty())
-						throw new Exception("In XLS input file there is no target (Sample Name): \"" 
-								+ targetNameDefArr + "\" which is a part of \""
-								+ group.getName() + "\" group");					
+						throw new Exception("In XLS input file there is no sample: \"" 
+								+ targetNameDefArr + "\" which is part of \""
+								+ group.getName() + "\" group.");					
 					break;
 				}			
 		}
