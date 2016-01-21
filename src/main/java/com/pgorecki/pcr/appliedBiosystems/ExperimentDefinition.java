@@ -9,22 +9,25 @@ public class ExperimentDefinition {
 
 	private String experimentName;
 	private String reference;
-	private ArrayList<String> controlGroup = new ArrayList<String>();
-	private ArrayList<HashMap<String, String[]>> groupList = new ArrayList<>();
+	private ArrayList<String> controlGroupList = new ArrayList<>();
+	private ArrayList<HashMap<String, ArrayList<String>>> groupList = new ArrayList<>();
 	
 	public ExperimentDefinition(String name, String reference, String control) {
 		super();
 		this.experimentName = name;
 		this.reference = reference;
 		for (String el : control.split(", ?"))
-			this.controlGroup.add(el);
+			this.controlGroupList.add(el);
 	}
 	
 	public void addGroup(String name, String targetNames) {
-		String[] splitted = targetNames.split(", ?");
-		HashMap<String, String[]> map = new HashMap<String, String[]>();
+		ArrayList<String> splitted = new ArrayList<>();
+		for (String targetName : targetNames.split(", ?"))
+			splitted.add(targetName);
+		
+		HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 		map.put(name, splitted);
-		this.groupList.add(map);
+		this.groupList.add(map);				
 	}
 		
 	public String getExperimentName() {
@@ -33,21 +36,21 @@ public class ExperimentDefinition {
 	public String getReference() {
 		return this.reference;
 	}
-	public ArrayList<String> getControlGroup() {
-		return this.controlGroup;
+	public ArrayList<String> getControlGroupList() {
+		return this.controlGroupList;
 	}
-	public ArrayList<HashMap<String, String[]>> getGroupList() {
+	public ArrayList<HashMap<String, ArrayList<String>>> getGroupList() {
 		return groupList;
 	}
 
 	public Boolean isGroupForSampleName(String sampleName) {
-		for (HashMap<String, String[]> pair : this.groupList)
-			for (String[] v : pair.values())
+		for (HashMap<String, ArrayList<String>> pair : this.groupList)
+			for (ArrayList<String> v : pair.values())
 				for (String s : v)
 					if (s.equals(sampleName))
 						return true;
 
-		if (this.controlGroup.contains(sampleName))
+		if (this.controlGroupList.contains(sampleName))
 			return true;
 
 		return false;
@@ -55,14 +58,14 @@ public class ExperimentDefinition {
 
 	public String getGroupNameForSampleName(String sampleName) {
 
-		for (HashMap<String, String[]> pair : this.groupList)
-			for (String[] v : pair.values())
+		for (HashMap<String, ArrayList<String>> pair : this.groupList)
+			for (ArrayList<String> v : pair.values())
 				for (String s : v)
 					if (s.equals(sampleName))
 						return pair.keySet().iterator().next();
 
 
-		for (String name : this.controlGroup)
+		for (String name : this.controlGroupList)
 			if (name.equals(sampleName))
 				return ExperimentDefinition.CONTROL_GROUP_NAME;
 
@@ -74,19 +77,19 @@ public class ExperimentDefinition {
 	}
 
 	public Boolean isControlGroup(String sampleName) {
-		return this.getControlGroup().contains(sampleName);
+		return this.getControlGroupList().contains(sampleName);
 	}
 
-	public String[] getSampleNameListForGroup(String groupName) {
-		for (HashMap<String, String[]> pair : this.groupList)
+	public ArrayList<String> getSampleNameListForGroup(String groupName) {
+		for (HashMap<String, ArrayList<String>> pair : this.groupList)
 			if (pair.keySet().contains(groupName))
 				return pair.get(groupName);
 
-		return new String[] {};													
+		return new ArrayList<String>();													
 	}
 
-	public String[] getSampleNameListForControl() {
-		return this.controlGroup.toArray(new String[this.controlGroup.size()]);
+	public ArrayList<String> getSampleNameListForControl() {
+		return this.controlGroupList;
 	}
 
 }

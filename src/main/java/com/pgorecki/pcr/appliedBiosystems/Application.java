@@ -3,26 +3,72 @@ package com.pgorecki.pcr.appliedBiosystems;
 import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.pgorecki.pcr.iface.Frame;
 
 
 public class Application {
-	
-	final static String VERSION = "0.5";
+
+	final static String VERSION = "1.0";
 
 	public static void main(String[] args) throws IOException {
-		
+
 		EventQueue.invokeLater(new Runnable() {			
 			public void run() {
 				new Frame(VERSION);
 			}
 		});
-		
+
 	}
 
+	public static void verify(Experiment experiment) throws Exception {
+		ExperimentDefinition experimentDefinition = experiment.getExperimentDefinition();
 
-	public static Experiment Process(Experiment experiment) {		
+		// Are expected control groups in xls input file?
+		ArrayList<String> expConList = experiment.getControlList();
+		ArrayList<String> expDefConList = new ArrayList<String>();
+		for (String controlName: experimentDefinition.getControlGroupList())
+			expDefConList.add(controlName);
+
+		boolean res = expDefConList.removeAll(expConList);
+		if (!res || !expDefConList.isEmpty())
+			throw new Exception("In XLS input file there is no control group of: \"" + expDefConList + "\"");
+
+
+		// Are expected references in xls input file?
+		if (!experiment.hasReference())
+			throw new Exception("In XLS input file there is no reference called: \"" + experimentDefinition.getReference() + "\"");
+
+
+		// Are targets per group in xls input file (as Sample Name)?
+		ArrayList<Group> experimentGroupList = experiment.getGroupList(); // excluding the control group
+
+		// For each group in definition
+		for (HashMap<String, ArrayList<String>> groupHashMap : experimentDefinition.getGroupList()) {
+			String groupNameDef = groupHashMap.keySet().iterator().next();
+			ArrayList<String> targetNameDefArr = new ArrayList<String>();
+			for (String s : groupHashMap.get(groupNameDef))
+				targetNameDefArr.add(s);
+			
+			ArrayList<String> sampleNameExperimentList = new ArrayList<>();
+
+			for (Group group : experimentGroupList)
+				if (group.getName().equals(groupNameDef)) {		
+					sampleNameExperimentList = group.getSampleNameList();
+
+					targetNameDefArr.removeAll(sampleNameExperimentList);
+
+					if (! targetNameDefArr.isEmpty())
+						throw new Exception("In XLS input file there is no target (Sample Name): \"" 
+								+ targetNameDefArr + "\" which is a part of \""
+								+ group.getName() + "\" group");					
+					break;
+				}			
+		}
+	}
+
+	public static Experiment process(Experiment experiment) {		
 		for (Group group : experiment.getGroupList()) {
 			if (group.isReference())
 				continue;						
@@ -59,7 +105,7 @@ public class Application {
 				System.out.println("rqValue: " + rqValue);
 				rqList.add(rqValue);
 			}
-			
+
 			group.setΔcтList(ΔcтList);
 			group.setΔΔcтList(ΔΔcтList);
 			group.setRqList(rqList);
@@ -81,7 +127,7 @@ public class Application {
 			System.out.println("semRq: " + semRq);								
 		}
 		System.out.println("Processed");
-		
+
 		return experiment;
 	}
 
@@ -92,13 +138,13 @@ public class Application {
 		ExperimentDefinition experimentDefinition = experiment.getExperimentDefinition();
 		Boolean isControl = groupName.equals(ExperimentDefinition.CONTROL_GROUP_NAME);
 
-		String[] sampleNameList;
+		ArrayList<String> sampleNameList;
 		if (!isControl)
 			sampleNameList = experimentDefinition.getSampleNameListForGroup(groupName);
 		else
 			sampleNameList = experimentDefinition.getSampleNameListForControl();						
 
-		ArrayList<Double> ΔcтList = new ArrayList<>(sampleNameList.length);
+		ArrayList<Double> ΔcтList = new ArrayList<>(sampleNameList.size());
 
 		for (String sampleName : sampleNameList) {
 			System.out.println(sampleName + ":");
